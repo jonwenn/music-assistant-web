@@ -33,6 +33,15 @@ function App() {
     };
 
     // Practice Session
+    const [practiceSessions, setPracticeSessions] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:8000/practice_session")
+            .then(res => res.json())
+            .then(data => setPracticeSessions(data));
+    }, []);
+
+
     const [practicesession, setPracticeSession] = useState([]);
     const [practiceSessionRepertoire, setPracticeSessionRepertoire] = useState([]);
     const [selectedId, setSelectedId] = useState("");
@@ -69,9 +78,18 @@ function App() {
         setPracticeSession(dataPracticeSession);
     };
 
-    //Weekly plamn
-    const [weeklyPlan, setWeeklyPlan] = useState([]);
+    //Weekly plan
+    const [weeklyPlans, setWeeklyPlans] = useState([]);
 
+    useEffect(() => {
+        fetch("http://localhost:8000/weekly_plan")
+            .then(res => res.json())
+            .then(data => setWeeklyPlans(data));
+    }, []);
+
+
+
+    const [weeklyPlan, setWeeklyPlan] = useState([]);
     const [availableMinutes, setAvailableMinutes] = useState("");
 
 
@@ -91,6 +109,11 @@ function App() {
         const dataWeeklyPlan = await resWeeklyPlan.json();
         setWeeklyPlan(dataWeeklyPlan);
     };
+
+    const getTitle = (id) => {
+        const piece = repertoire.find(r => r.id === id)
+        return piece ? piece.title : "Unknown"
+    }
 
     return (
         <div>
@@ -134,6 +157,26 @@ function App() {
             <h3>Create Weekly Plan</h3>
             <input placeholder="Available minutes" value={availableMinutes} onChange={e => setAvailableMinutes(e.target.value)}/>
             <button onClick={createWeeklyPlan}>Create</button>
+
+            <h2>History</h2>
+            <h3>Practice Sessions</h3>
+            <ul>
+                {practiceSessions.map(item => (
+                    <li key={item.id}>
+                        {item.date} – title {getTitle(item.repertoire_id)} – reflection {item.reflection}
+                    </li>
+                ))}
+            </ul>
+
+            <h3>Weekly Plans</h3>
+            <ul>
+                {weeklyPlans.map(item => (
+                    <li key={item.id}>
+                        {item.created_at} – minutes {item.available_minutes} – content {item.content}
+                    </li>
+                ))}
+            </ul>
+
         </div>
     );
 }
