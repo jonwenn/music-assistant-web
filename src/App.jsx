@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+const API_BASE = import.meta.env.VITE_API_URL || "";
 
 function App() {
     // Repertoire
     const [repertoire, setRepertoire] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:8000/repertoire")
+        fetch(`${API_BASE}/repertoire`)
             .then(res => res.json())
             .then(data => setRepertoire(data));
     }, []);
@@ -15,7 +16,7 @@ function App() {
     const [status, setStatus] = useState("learning");
 
     const createRepertoire = async () => {
-        await fetch("http://localhost:8000/repertoire", {
+        await fetch(`${API_BASE}/repertoire`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -27,7 +28,7 @@ function App() {
             })
         });
 
-        const resRepertoire = await fetch("http://localhost:8000/repertoire");
+        const resRepertoire = await fetch(`${API_BASE}/repertoire`);
         const dataRepertoire = await resRepertoire.json();
         setRepertoire(dataRepertoire);
     };
@@ -36,7 +37,7 @@ function App() {
     const [practiceSessions, setPracticeSessions] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:8000/practice_session")
+        fetch(`${API_BASE}/practice_session`)
             .then(res => res.json())
             .then(data => setPracticeSessions(data));
     }, []);
@@ -47,7 +48,7 @@ function App() {
     const [selectedId, setSelectedId] = useState("");
 
     useEffect(() => {
-        fetch("http://localhost:8000/repertoire")
+        fetch(`${API_BASE}/repertoire`)
             .then(res => res.json())
             .then(data => setPracticeSessionRepertoire(data));
     }, []);
@@ -60,7 +61,7 @@ function App() {
 
     const createPracticeSession = async () => {
 
-        await fetch("http://localhost:8000/practice_session", {
+        await fetch(`${API_BASE}/practice_session`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -73,7 +74,7 @@ function App() {
             })
         });
 
-        const resPracticeSession = await fetch("http://localhost:8000/practice_session");
+        const resPracticeSession = await fetch(`${API_BASE}/practice_session`);
         const dataPracticeSession = await resPracticeSession.json();
         setPracticeSession(dataPracticeSession);
     };
@@ -82,7 +83,7 @@ function App() {
     const [weeklyPlans, setWeeklyPlans] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:8000/weekly_plan")
+        fetch(`${API_BASE}/weekly_plan`)
             .then(res => res.json())
             .then(data => setWeeklyPlans(data));
     }, []);
@@ -95,7 +96,7 @@ function App() {
 
     const createWeeklyPlan = async () => {
 
-        await fetch("http://localhost:8000/weekly_plan", {
+        await fetch(`${API_BASE}/weekly_plan`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -105,7 +106,7 @@ function App() {
             })
         });
 
-        const resWeeklyPlan = await fetch("http://localhost:8000/weekly_plan");
+        const resWeeklyPlan = await fetch(`${API_BASE}/weekly_plan`);
         const dataWeeklyPlan = await resWeeklyPlan.json();
         setWeeklyPlan(dataWeeklyPlan);
     };
@@ -117,7 +118,7 @@ function App() {
 
     return (
         <div>
-            <h1>Music Assistant</h1>
+            <h1>Music Assistant!!!</h1>
 
             <h2>Repertoire</h2>
             <ul>
