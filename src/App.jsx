@@ -3,6 +3,7 @@ const API_BASE = import.meta.env.VITE_API_URL || "";
 
 function App() {
     // Repertoire
+    // Get
     const [repertoire, setRepertoire] = useState([]);
 
     useEffect(() => {
@@ -11,9 +12,11 @@ function App() {
             .then(data => setRepertoire(data));
     }, []);
 
+    // Set
     const [title, setTitle] = useState("");
     const [difficulty, setDifficulty] = useState(1);
     const [status, setStatus] = useState("learning");
+
 
     const createRepertoire = async () => {
         await fetch(`${API_BASE}/repertoire`, {
@@ -33,7 +36,19 @@ function App() {
         setRepertoire(dataRepertoire);
     };
 
+    // Delete
+    const deleteRepertoire = async (id) => {
+        await fetch(`${API_BASE}/repertoire?id=${id}`, {
+            method: "DELETE",
+
+        });
+        const resRepertoire = await fetch(`${API_BASE}/repertoire`);
+        const dataRepertoire = await resRepertoire.json();
+        setRepertoire(dataRepertoire);
+    };
+
     // Practice Session
+    // Get
     const [practiceSessions, setPracticeSessions] = useState([]);
 
     useEffect(() => {
@@ -42,16 +57,9 @@ function App() {
             .then(data => setPracticeSessions(data));
     }, []);
 
-
+    // Set
     const [practicesession, setPracticeSession] = useState([]);
-    const [practiceSessionRepertoire, setPracticeSessionRepertoire] = useState([]);
     const [selectedId, setSelectedId] = useState("");
-
-    useEffect(() => {
-        fetch(`${API_BASE}/repertoire`)
-            .then(res => res.json())
-            .then(data => setPracticeSessionRepertoire(data));
-    }, []);
 
     const today = new Date().toISOString().split("T")[0];
     const [date, setDate] = useState(today);
@@ -76,10 +84,21 @@ function App() {
 
         const resPracticeSession = await fetch(`${API_BASE}/practice_session`);
         const dataPracticeSession = await resPracticeSession.json();
-        setPracticeSession(dataPracticeSession);
+        setPracticeSessions(dataPracticeSession);
+    };
+
+    // Delete
+    const deletePracticeSession = async (id) => {
+        await fetch(`${API_BASE}/practice_session?id=${id}`, {
+            method: "DELETE",
+        });
+        const resPracticeSession = await fetch(`${API_BASE}/practice_session`);
+        const dataPracticeSession = await resPracticeSession.json();
+        setPracticeSessions(dataPracticeSession);
     };
 
     //Weekly plan
+    // Get
     const [weeklyPlans, setWeeklyPlans] = useState([]);
 
     useEffect(() => {
@@ -88,11 +107,8 @@ function App() {
             .then(data => setWeeklyPlans(data));
     }, []);
 
-
-
-    const [weeklyPlan, setWeeklyPlan] = useState([]);
+    // Set
     const [availableMinutes, setAvailableMinutes] = useState("");
-
 
     const createWeeklyPlan = async () => {
 
@@ -108,7 +124,18 @@ function App() {
 
         const resWeeklyPlan = await fetch(`${API_BASE}/weekly_plan`);
         const dataWeeklyPlan = await resWeeklyPlan.json();
-        setWeeklyPlan(dataWeeklyPlan);
+        setWeeklyPlans(dataWeeklyPlan);
+    };
+
+    // Delete
+    const deleteWeeklyPlan = async (id) => {
+        await fetch(`${API_BASE}/weekly_plan?id=${id}`, {
+            method: "DELETE",
+
+        });
+        const resWeeklyPlan = await fetch(`${API_BASE}/weekly_plan`);
+        const dataWeeklyPlan = await resWeeklyPlan.json();
+        setWeeklyPlans(dataWeeklyPlan);
     };
 
     const getTitle = (id) => {
@@ -118,13 +145,14 @@ function App() {
 
     return (
         <div>
-            <h1>Music Assistant!!!</h1>
+            <h1>Music Assistant</h1>
 
             <h2>Repertoire</h2>
             <ul>
                 {repertoire.map(item => (
                     <li key={item.id}>
                         {item.title} – difficulty {item.difficulty} – {item.status}
+                        <button onClick={() => deleteRepertoire(item.id)}>Delete</button>
                     </li>
                 ))}
             </ul>
@@ -145,7 +173,7 @@ function App() {
             <input type="number" value={minutes} onChange={e => setMinutes(e.target.value)} />
             <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
                 <option value="">Select</option>
-                {practiceSessionRepertoire.map(item => (
+                {repertoire.map(item => (
                     <option key={item.id} value={item.id}>
                         {item.title}
                     </option>
@@ -165,6 +193,7 @@ function App() {
                 {practiceSessions.map(item => (
                     <li key={item.id}>
                         {item.date} – title {getTitle(item.repertoire_id)} – reflection {item.reflection}
+                        <button onClick={() => deletePracticeSession(item.id)}>Delete</button>
                     </li>
                 ))}
             </ul>
@@ -174,6 +203,7 @@ function App() {
                 {weeklyPlans.map(item => (
                     <li key={item.id}>
                         {item.created_at} – minutes {item.available_minutes} – content {item.content}
+                        <button onClick={() => deleteWeeklyPlan(item.id)}>Delete</button>
                     </li>
                 ))}
             </ul>
